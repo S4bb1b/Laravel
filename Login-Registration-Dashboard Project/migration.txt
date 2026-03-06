@@ -1,0 +1,9 @@
+Schema::create('user', function (Blueprint $Table) {
+    $table->id();
+    $table->string('name');
+    $table->string('email')->unique();
+    $table->string('phone');
+    $table->string('password');
+    $table->date('dob'); // Date of Birth
+    $table->timestamps();
+});

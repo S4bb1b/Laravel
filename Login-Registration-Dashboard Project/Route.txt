@@ -1,0 +1,19 @@
+use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Route;
+
+// View Routes
+Route::view('/login', 'auth.login')->name('login');
+Route::view('/register', 'auth.register');
+
+// Action Routes
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Dashboard (Protected by basic logic)
+Route::get('/dashboard', function () {
+    if (!request()->hasCookie('user_id')) {
+        return redirect('/login');
+    }
+    return view('dashboard');
+});
