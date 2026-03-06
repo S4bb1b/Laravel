@@ -1,0 +1,57 @@
+namespace App\Http\Controllers;
+
+use App\Models\Blog;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+
+class BlogController extends Controller
+{
+    // List all blogs
+    public function index() {
+        $blogs = Blog::with('category')->latest()->get();
+        return view('blogs.index', compact('blogs'));
+    }
+
+    // Store new blog
+    public function store(Request $request) {
+        $request->validate([
+            'title' => 'required',
+            'category_id' => 'required|exists:categories,id',
+            'content' => 'required',
+            'feature_image' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        $path = $request->file('feature_image')->store('blogs', 'public');
+
+        Blog::create([
+            'title' => $request->title,
+            'slug' => Str::slug($request->title),
+            'category_id' => $request->category_id,
+            'content' => $request->content,
+            'feature_image' => $path,
+        ]);
+
+        return redirect()->route('blogs.index')->with('success', 'Blog created!');
+    }
+
+    // Update Blog
+    public function update(Request $request, Blog $blog) {
+        $data = $request->validate(['title' => 'required', 'content' => 'required']);
+        
+        if ($request->hasFile('feature_image')) {
+            Storage::disk('public')->delete($blog->feature_image);
+            $data['feature_image'] = $request->file('feature_image')->store('blogs', 'public');
+        }
+
+        $blog->update($data);
+        return back()->with('success', 'Blog updated!');
+    }
+
+    // Publish/Unpublish Toggle
+    public function togglePublish(Blog $blog) {
+        $blog->update(['is_published' => !$blog->is_published]);
+        return back()->with('success', 'Status updated.');
+    }
+}

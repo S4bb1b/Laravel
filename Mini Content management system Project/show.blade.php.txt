@@ -1,0 +1,15 @@
+<div class="container">
+    <h1>{{ $blog->title }}</h1>
+    <p class="text-muted">Category: {{ $blog->category->name }} | Published: {{ $blog->created_at->format('M d, Y') }}</p>
+    
+    <div class="my-4">
+        <img src="{{ asset('storage/' . $blog->feature_image) }}" class="img-fluid rounded" alt="Featured Image">
+    </div>
+
+    <div class="content">
+        {!! nl2br(e($blog->content)) !!}
+    </div>
+
+    <hr>
+    <a href="{{ route('blogs.index') }}" class="btn btn-secondary">Back to List</a>
+</div>

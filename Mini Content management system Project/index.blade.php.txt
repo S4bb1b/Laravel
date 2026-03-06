@@ -1,0 +1,38 @@
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($blogs as $blog)
+        <tr>
+            <td>
+                <img src="{{ asset('storage/' . $blog->feature_image) }}" width="80">
+            </td>
+            <td>{{ $blog->title }}</td>
+            <td>{{ $blog->category->name }}</td>
+            <td>
+                <span class="badge {{ $blog->is_published ? 'bg-success' : 'bg-secondary' }}">
+                    {{ $blog->is_published ? 'Published' : 'Draft' }}
+                </span>
+            </td>
+            <td>
+                <form action="{{ route('blogs.publish', $blog->id) }}" method="POST" style="display:inline;">
+                    @csrf @method('PATCH')
+                    <button class="btn btn-sm btn-warning">
+                        {{ $blog->is_published ? 'Unpublish' : 'Publish' }}
+                    </button>
+                </form>
+
+                <a href="{{ route('blogs.show', $blog->id) }}" class="btn btn-sm btn-info">View</a>
+                <a href="{{ route('blogs.edit', $blog->id) }}" class="btn btn-sm btn-primary">Edit</a>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>

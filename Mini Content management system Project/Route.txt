@@ -1,0 +1,4 @@
+use App\Http\Controllers\BlogController;
+
+Route::resource('blogs', BlogController::class);
+Route::patch('/blogs/{blog}/publish', [BlogController::class, 'togglePublish'])->name('blogs.publish');
