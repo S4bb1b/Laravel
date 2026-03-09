@@ -1,0 +1,14 @@
+
+public function toggleFavorite(Vehicle $vehicle) {
+    auth()->user()->favoriteVehicles()->toggle($vehicle->id);
+    return back();
+}
+
+Schema::create('messages', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('sender_id')->constrained('users');
+    $table->foreignId('receiver_id')->constrained('users');
+    $table->foreignId('vehicle_id')->constrained();
+    $table->text('message_text');
+    $table->timestamps();
+});

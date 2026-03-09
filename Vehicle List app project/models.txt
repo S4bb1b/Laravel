@@ -1,0 +1,15 @@
+class Vehicle extends Model {
+    protected $fillable = ['make', 'model', 'year', 'price', 'description', 'is_active', 'user_id'];
+
+    public function images() {
+        return $this->hasMany(VehicleImage::class);
+    }
+
+    public function owner() {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function favoritedBy() {
+        return $this->belongsToMany(User::class, 'favorites');
+    }
+}
